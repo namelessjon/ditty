@@ -26,6 +26,16 @@
         );
 
         // make edit links work
+        $("a.new_ditty").livequery('click',
+          function() {
+            $.get(this, function(data, status) {
+              $('.ditty:last').after(data);
+            });
+            return false;
+          }
+        );
+
+        // make edit links work
         $("div.ditty a[rel='edit']").livequery('click',
           function() {
             var tag = this;
@@ -86,6 +96,34 @@
             return false;
           }
         );
+  
+        // make done links work on create forms
+        $("div.ditty_edit a[rel='create']").livequery('click',
+          function() {
+            var tag = this;
+            var form_data = {};
+
+            // find the form
+            var form = $(tag).parents('.ditty_edit').children('form');
+            form_data.title = $(form).children("input[name='ditty_title']").val();
+            form_data.body = $(form).children("textarea[name='ditty_body']").val();
+
+            $.ajax({
+              url: this,
+              type: 'POST',
+              timeout: 5000,
+              data: form_data,
+              success: function (data, status) {
+                $(tag).parents('.ditty_edit').after(data);
+                $(tag).parents('.ditty_edit').remove();
+              },
+              error: function (xhr, status) {
+                alert(xhr.responseText);
+              }
+            });
+            return false;
+          }
+        );
 
         }); // close ready block
 
@@ -98,5 +136,5 @@
         - @ditties.each do |ditty|
           =format_ditty(ditty)
       #sidebar
-        %a.new_ditty{:href => '#'} New Ditty
+        %a.new_ditty{:href => '/ditty/new'} New Ditty
         %a.close_all{:href => '#'} Close All

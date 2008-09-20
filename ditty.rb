@@ -88,3 +88,19 @@ post '/ditty' do
   end
 end
 
+
+get '/ditty/new' do
+  body <<-eos
+  <div class='ditty_edit'>
+  <h2>New Ditty</h2>
+  <ul class='edit_links'>
+    <li><a href='/ditty' rel='cancel'>cancel</a></li>
+    <li><a href='/ditty' rel='create'>done</a></li>
+  </ul>
+  <form action='ditty' class='new_ditty_form'>
+    <input type='text' name='ditty_title' size='60' value='' /><br />
+    <textarea name='ditty_body' cols='60' rows='10'></textarea>
+  </form>
+  </div>
+  eos
+end
