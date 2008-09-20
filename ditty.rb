@@ -78,3 +78,13 @@ put '/ditty/:id' do
     throw :halt, [403, @ditty.errors.full_messages.join("\n")]
   end
 end
+
+post '/ditty' do
+  @ditty = Ditty.new(:title => params['title'], :body => params['body'])
+  if @ditty.save
+    format_ditty(@ditty)
+  else
+    throw :halt, [403, @ditty.errors.full_messages.join("\n")]
+  end
+end
+
