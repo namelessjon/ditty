@@ -1,0 +1,102 @@
+!!! XML
+!!!
+%html{:xmlns => "http://www.w3.org/1999/xhtml", 'xml:lang' => "en", :lang => "en"}
+  %head
+    %title Ditty - A non-linear web notebook
+    %script{:type => 'text/javascript', :src => 'jquery.js'}
+    %script{:type => 'text/javascript', :src => 'jquery.livequery.min.js'}
+    %script{:type => 'text/javascript', :src => 'jquery.form.js'}
+    :javascript
+      $(document).ready(function() {
+        // let tiddlers be closed
+        $("div.ditty a[rel='close']").livequery('click',
+          function() {
+            $(this).parents('.ditty').slideUp('fast', function() { $(this).remove(); } );
+            return false;
+          }
+        );
+
+        // make the editing form cancellable
+        $("div.ditty_edit ul.edit_links a[rel='cancel']").livequery('click',
+          function() {
+            $(this).parents('.ditty_edit').prev().slideDown('fast');
+            $(this).parents('.ditty_edit').remove();
+            return false;
+          }
+        );
+
+        // make edit links work
+        $("div.ditty a[rel='edit']").livequery('click',
+          function() {
+            var tag = this;
+            $.get(this, function(data, status) {
+              $(tag).parents('.ditty').after(data);
+              $(tag).parents('.ditty').hide();
+            });
+            return false;
+          }
+        );
+
+        // make delete links work
+        $("div.ditty_edit a[rel='destroy']").livequery('click',
+          function() {
+            var tag = this;
+            $.ajax({
+              url: this,
+              type: 'POST',
+              timeout: 5000,
+              data: {_method: 'DELETE' },
+              success: function (data, status) {
+                $(tag).parents('.ditty_edit').prev().remove();
+                $(tag).parents('.ditty_edit').remove();
+              },
+              error: function (xhr, status) {
+                alert(xhr.responseText);
+              }
+            });
+            return false;
+          }
+        );
+
+        // make done links work
+        $("div.ditty_edit a[rel='update']").livequery('click',
+          function() {
+            var tag = this;
+            var form_data = {};
+            form_data._method = 'PUT';
+
+            // find the form
+            var form = $(tag).parents('.ditty_edit').children('form');
+            form_data.title = $(form).children("input[name='ditty_title']").val();
+            form_data.body = $(form).children("textarea[name='ditty_body']").val();
+
+            $.ajax({
+              url: this,
+              type: 'POST',
+              timeout: 5000,
+              data: form_data,
+              success: function (data, status) {
+                $(tag).parents('.ditty_edit').prev().replaceWith(data);
+                $(tag).parents('.ditty_edit').remove();
+              },
+              error: function (xhr, status) {
+                alert(xhr.responseText);
+              }
+            });
+            return false;
+          }
+        );
+
+        }); // close ready block
+
+  %body
+    %h1 Ditty
+    %h2 A non-linear web notebook
+    #content
+      #menubar Menu goes here!
+      #ditties
+        - @ditties.each do |ditty|
+          =format_ditty(ditty)
+      #sidebar
+        %a.new_ditty{:href => '#'} New Ditty
+        %a.close_all{:href => '#'} Close All
