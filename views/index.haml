@@ -16,6 +16,17 @@
           }
         );
 
+        // make get links work
+        $("a.existing").livequery('click',
+          function() {
+            var tag = this;
+            $.get(this, function(data, status) {
+              $(tag).parents('.ditty').after(data);
+            });
+            return false;
+          }
+        );
+
         // make the editing form cancellable
         $("div.ditty_edit ul.edit_links a[rel='cancel']").livequery('click',
           function() {

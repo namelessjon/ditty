@@ -32,7 +32,14 @@ helpers do
   end
 
   def linkify_text(body)
-    RedCloth.new(body).to_html
+    RedCloth.new(body).to_html.gsub(/([A-Z][a-z]+[A-Z][A-Za-z0-9]+)/) do |title|
+      @ditty = Ditty.first(:title => title)
+      if @ditty
+        "<a class='existing' href='/ditty/#{@ditty.id}'>#{title}</a>"
+      else
+        "<a class='new_ditty' href='/ditty/new?title=#{title}'>#{title}</a>"
+      end
+    end
   end
 end
 
@@ -79,6 +86,12 @@ put '/ditty/:id' do
   end
 end
 
+get '/ditty/:id' do
+  @ditty = Ditty.get(params['id'])
+  throw :halt, [404, 'ditty not found'] unless @ditty
+  body format_ditty(@ditty)
+end
+
 post '/ditty' do
   @ditty = Ditty.new(:title => params['title'], :body => params['body'])
   if @ditty.save
@@ -98,7 +111,7 @@ get '/ditty/new' do
     <li><a href='/ditty' rel='create'>done</a></li>
   </ul>
   <form action='ditty' class='new_ditty_form'>
-    <input type='text' name='ditty_title' size='60' value='' /><br />
+    <input type='text' name='ditty_title' size='60' value='#{(params['title']) ? params['title'] : ''}' /><br />
     <textarea name='ditty_body' cols='60' rows='10'></textarea>
   </form>
   </div>
