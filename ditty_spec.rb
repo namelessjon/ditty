@@ -10,6 +10,7 @@ end
 describe 'Ditty' do
   require 'ditty'
   before(:all) do
+    File.unlink('test.log') if File.exists?('test.log')
     DataMapper::Logger.new('test.log', :debug)
     DataMapper.setup(:default, 'sqlite3::memory:')
   end
