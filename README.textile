@@ -4,7 +4,7 @@ A non-linear web notebook written with Sinatra and jQuery
 
 h2. What?
 
-Ditty is inspired by "TiddlyWiki":http://tiddlywiki.com written by
+Ditty is inspired by "TiddlyWiki":http://www.tiddlywiki.com written by
 Jeremy Ruston, and at some point might even make itself compatiable with that
 project.  For those that arn't familiar with the concept though:  Ditty (and
 TiddlyWiki) are designed around the concept of 'ditties' (or tiddlers) which
