@@ -1,7 +1,6 @@
 require 'minigems'
 require 'sinatra'
-require 'spec/interop/test'
-require 'sinatra/test/unit'
+require 'sinatra/test/rspec'
 
 describe 'Ditty' do
   require 'ditty'
