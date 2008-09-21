@@ -17,13 +17,15 @@ end
 helpers do
   def format_ditty(ditty)
     string = <<-eos
-    <div class='ditty' id='ditty_#{ditty.id}'>
+    <div class='ditty' id='#{ditty.title}'>
       <h3>#{ditty.title}</h3>
       <ul class='ditty_control'>
-        <li><a rel='close' href='/ditty/#{ditty.id}'>close</a></li>
-        <li><a rel='edit' href='/ditty/#{ditty.id}/edit'>edit</a></li>
+        <li><a rel='close' href='/#{ditty.title}'>close</a></li>
+        <li><a rel='edit' href='/#{ditty.title}/edit'>edit</a></li>
       </ul>
+    <div class='body'>
     #{linkify_text(ditty.body)}
+    </div>
     <ul class='tags'>
     <li>tags would be here</li>
     </ul>
@@ -35,9 +37,9 @@ helpers do
     RedCloth.new(body).to_html.gsub(/([A-Z][a-z]+[A-Z][A-Za-z0-9]+)/) do |title|
       @ditty = Ditty.first(:title => title)
       if @ditty
-        "<a class='existing' href='/ditty/#{@ditty.id}'>#{title}</a>"
+        "<a class='existing' href='/#{title}'>#{title}</a>"
       else
-        "<a class='new_ditty' href='/ditty/new?title=#{title}'>#{title}</a>"
+        "<a class='new_ditty' href='/new?title=#{title}'>#{title}</a>"
       end
     end
   end
@@ -48,15 +50,15 @@ get '/' do
   haml :index
 end
 
-get '/ditty/new' do
+get '/new' do
   body <<-eos
   <div class='ditty_edit'>
-  <h2>New Ditty</h2>
+  <h3>New Ditty</h3>
   <ul class='edit_links'>
-    <li><a href='/ditty' rel='cancel'>cancel</a></li>
-    <li><a href='/ditty' rel='create'>done</a></li>
+    <li><a href='/' rel='cancel'>cancel</a></li>
+    <li><a href='/' rel='create'>done</a></li>
   </ul>
-  <form action='ditty' class='new_ditty_form'>
+  <form action='/' class='new_ditty_form'>
     <input type='text' name='ditty_title' size='60' value='#{(params['title']) ? params['title'] : ''}' /><br />
     <textarea name='ditty_body' cols='60' rows='10'></textarea>
   </form>
@@ -64,19 +66,19 @@ get '/ditty/new' do
   eos
 end
 
-get '/ditty/:id/edit' do
+get '/:id/edit' do
   @id = params['id']
-  @ditty = Ditty.get(@id)
+  @ditty = Ditty.first(:title => @id)
   throw :halt, [404, 'ditty not found'] unless @ditty
   body <<-eos
-  <div class='ditty_edit' id='edit_ditty_#{@id}'>
+  <div class='ditty_edit' id='edit_#{@ditty.title}'>
   <h3>#{@ditty.title}</h3>
   <ul class='edit_links'>
-    <li><a rel='cancel' href='/ditty/#{@id}'>cancel</a></li>
-    <li><a rel='update' href='/ditty/#{@id}'>done</a></li>
-    <li><a rel='destroy' href='/ditty/#{@id}'>delete</a></li>
+    <li><a rel='cancel' href='/#{@ditty.title}'>cancel</a></li>
+    <li><a rel='update' href='/#{@ditty.title}'>done</a></li>
+    <li><a rel='destroy' href='/#{@ditty.title}'>delete</a></li>
   </ul>
-  <form action='ditty/#{@id}' id='ditty_form_#{@id}'>
+  <form action='/#{@ditty.title}' id='#{@ditty.title}_form'>
     <input type='text' name='ditty_title' size='60' value='#{@ditty.title}' /><br />
     <textarea name='ditty_body' cols='60' rows='10'>#{@ditty.body}</textarea>
   </form>
@@ -84,14 +86,14 @@ get '/ditty/:id/edit' do
   eos
 end
 
-delete '/ditty/:id' do
-  @ditty = Ditty.get(params['id'])
+delete '/:id' do
+  @ditty = Ditty.first(:title => params['id'])
   throw :halt, [404, 'ditty not found'] unless @ditty
   throw :halt, [400, 'Destory Failed']  unless @ditty.destroy
 end
 
-put '/ditty/:id' do
-  @ditty = Ditty.get(params['id'])
+put '/:id' do
+  @ditty = Ditty.first(:title => params['id'])
   throw :halt, [404, 'ditty not found'] unless @ditty
   @ditty.title = params['title']
   @ditty.body = params['body']
@@ -102,13 +104,13 @@ put '/ditty/:id' do
   end
 end
 
-get '/ditty/:id' do
-  @ditty = Ditty.get(params['id'])
+get '/:id' do
+  @ditty = Ditty.first(:title => params['id'])
   throw :halt, [404, 'ditty not found'] unless @ditty
   body format_ditty(@ditty)
 end
 
-post '/ditty' do
+post '/' do
   @ditty = Ditty.new(:title => params['title'], :body => params['body'])
   if @ditty.save
     format_ditty(@ditty)
