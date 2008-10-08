@@ -254,3 +254,29 @@ $(document).ready(function() {
 }); // close ready block
   eos
 end
+
+use_in_file_templates!
+
+__END__
+
+@@ index
+!!! XML
+!!!
+%html{:xmlns => "http://www.w3.org/1999/xhtml", 'xml:lang' => "en", :lang => "en"}
+  %head
+    %title Ditty - A non-linear web notebook
+    %script{:type => 'text/javascript', :src => 'jquery.js'}
+    %script{:type => 'text/javascript', :src => 'jquery.livequery.min.js'}
+    %script{:type => 'text/javascript', :src => 'jquery.form.js'}
+    %script{:type => 'text/javascript', :src => 'ditty.js'}
+  %body
+    %h1 Ditty
+    %h2 A non-linear web notebook
+    #content
+      #menubar Menu goes here!
+      #ditties
+        - @ditties.each do |ditty|
+          =format_ditty(ditty)
+      #sidebar
+        %a.new_ditty{:href => '/ditty/new'} New Ditty
+        %a.close_all{:href => '#'} Close All
