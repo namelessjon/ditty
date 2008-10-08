@@ -51,19 +51,7 @@ get '/' do
 end
 
 get '/new' do
-  body <<-eos
-  <div class='ditty_edit'>
-  <h3>New Ditty</h3>
-  <ul class='edit_links'>
-    <li><a href='/' rel='cancel'>cancel</a></li>
-    <li><a href='/' rel='create'>done</a></li>
-  </ul>
-  <form action='/' class='new_ditty_form'>
-    <input type='text' name='ditty_title' size='60' value='#{(params['title']) ? params['title'] : ''}' /><br />
-    <textarea name='ditty_body' cols='60' rows='10'></textarea>
-  </form>
-  </div>
-  eos
+  haml :new
 end
 
 get '/:id/edit' do
@@ -269,9 +257,9 @@ __END__
         %a.close_all{:href => '#'} Close All
 
 @@ edit
-%div{:class => 'ditty_edit', :id => "edit_#{@ditty.title}"}
+.ditty_edit{:id => "edit_#{@ditty.title}"}
   %h3= @ditty.title
-  %ul{:class => 'edit_links'}
+  %ul.edit_links
     %li
       %a{:rel => 'cancel', :href => "/#{@ditty.title}"} cancel
     %li
@@ -280,4 +268,19 @@ __END__
       %a{:rel => 'destroy', :href => "/#{@ditty.title}"} delete
   %form{:action => "/#{@ditty.title}", :id => "#{@ditty.title}_form"}
     %input{:type => "text", :name => "ditty_title", :size => 60, :value => @ditty.title}
+    %br
     %text_area{:name => 'ditty_body', :cols => 60, :rows => 10}= @ditty.body
+
+@@ new
+.ditty_edit
+  %h3= (params['title']) ? "#{params['title']} (New)" : "New Ditty"
+  %ul.edit_links
+    %li
+      %a{:rel => 'cancel', :href => "/"} cancel
+    %li
+      %a{:rel => 'create', :href => "/"} done
+  %form.edit_links{:action => '/'}
+    %input{:type => "text", :name => "ditty_title", :size => 60, :value => "{(params['title']) ? params['title'] : ''}"}
+    %br
+    %text_area{:name => 'ditty_body', :cols => 60, :rows => 10}
+
