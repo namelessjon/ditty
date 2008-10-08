@@ -70,20 +70,7 @@ get '/:id/edit' do
   @id = params['id']
   @ditty = Ditty.first(:title => @id)
   throw :halt, [404, 'ditty not found'] unless @ditty
-  body <<-eos
-  <div class='ditty_edit' id='edit_#{@ditty.title}'>
-  <h3>#{@ditty.title}</h3>
-  <ul class='edit_links'>
-    <li><a rel='cancel' href='/#{@ditty.title}'>cancel</a></li>
-    <li><a rel='update' href='/#{@ditty.title}'>done</a></li>
-    <li><a rel='destroy' href='/#{@ditty.title}'>delete</a></li>
-  </ul>
-  <form action='/#{@ditty.title}' id='#{@ditty.title}_form'>
-    <input type='text' name='ditty_title' size='60' value='#{@ditty.title}' /><br />
-    <textarea name='ditty_body' cols='60' rows='10'>#{@ditty.body}</textarea>
-  </form>
-  </div>
-  eos
+  haml :edit
 end
 
 delete '/:id' do
@@ -280,3 +267,17 @@ __END__
       #sidebar
         %a.new_ditty{:href => '/ditty/new'} New Ditty
         %a.close_all{:href => '#'} Close All
+
+@@ edit
+%div{:class => 'ditty_edit', :id => "edit_#{@ditty.title}"}
+  %h3= @ditty.title
+  %ul{:class => 'edit_links'}
+    %li
+      %a{:rel => 'cancel', :href => "/#{@ditty.title}"} cancel
+    %li
+      %a{:rel => 'update', :href => "/#{@ditty.title}"} done
+    %li
+      %a{:rel => 'destroy', :href => "/#{@ditty.title}"} delete
+  %form{:action => "/#{@ditty.title}", :id => "#{@ditty.title}_form"}
+    %input{:type => "text", :name => "ditty_title", :size => 60, :value => @ditty.title}
+    %text_area{:name => 'ditty_body', :cols => 60, :rows => 10}= @ditty.body
