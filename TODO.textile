@@ -1,0 +1,9 @@
+h1. TODO
+
+* implement 'Hot Ditties', rather than have everything on the front page
+* implement an 'All Ditties' index
+* prevent multiple loading of ditties
+* fix links when a ditty is made
+* add some styling
+* move over to git backend?
+* tagging?
