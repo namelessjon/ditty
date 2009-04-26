@@ -77,9 +77,9 @@ end
 put '/:id' do
   @ditty = Ditty.first(:title => params['id'])
   throw :halt, [404, 'ditty not found'] unless @ditty
-  @ditty.title = params['title']
-  @ditty.body = params['body']
-  if !@ditty.dirty? || @ditty.save
+  @ditty.title = params['title'] if params['title']
+  @ditty.body = params['body'] if params['body']
+  if @ditty.save
     format_ditty(@ditty)
   else
     throw :halt, [400, @ditty.errors.full_messages.join("\n")]

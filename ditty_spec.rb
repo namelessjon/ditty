@@ -259,11 +259,11 @@ describe 'Ditty' do
       end
 
       it 'responds with 400 if there are validation issues' do
-        put_it '/AnAwesomeDitty', :title => 'AnAwesomeDitty'
+        put_it '/AnAwesomeDitty', :title => 'AnAwesomeDitty', :body => ""
         @response.status.should eql(400)
       end
       it 'returns the validation issues' do
-        put_it '/AnAwesomeDitty', :title => 'AnAwesomeDitty'
+        put_it '/AnAwesomeDitty', :title => 'AnAwesomeDitty', :body => ""
         @response.should match(/Ditty needs content/)
       end
     end
