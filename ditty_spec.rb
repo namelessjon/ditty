@@ -21,9 +21,33 @@ describe 'Ditty' do
 
   describe 'bulk actions' do
     describe 'GET /' do
-      it 'has a main page' do
-        get_it '/'
-        @response.should be_ok
+      describe 'with a HotDitties ditty' do
+        before(:each) do
+          post_it '/', :title => 'AnAwesomeDitty', :body => 'See how awesome it is?'
+          post_it '/', :title => 'PlainDitty', :body => 'Nothing to see here, move along'
+          post_it '/', :title => 'ALessThanAwesomeDitty', :body => 'See how un-awesome it is?'
+          post_it '/', :title => 'HotDitties', :body => 'AnAwesomeDitty'
+          get_it '/'
+        end
+
+        it "shows successfully" do
+          @response.should be_ok
+        end
+
+        it "has a ditty mentioned on the hot ditty page" do
+          body.should have_tag('div.ditty#AnAwesomeDitty')
+        end
+
+        it "doesn't have a ditty which isn't mentioned" do
+          body.should_not have_tag('div.ditty#ALessThanAwesomeDitty')
+        end
+
+        it "shows multiple ditties when they're on the list" do
+          put_it '/HotDitties', :body => "AnAwesomeDitty\nPlainDitty"
+          get_it '/'
+          body.should have_tag('div.ditty#PlainDitty')
+          body.should have_tag('div.ditty#AnAwesomeDitty')
+        end
       end
     end
 

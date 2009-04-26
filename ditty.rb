@@ -46,8 +46,15 @@ helpers do
 end
 
 get '/' do
-  @ditties = Ditty.all
-  haml :index
+  @hot_ditties = Ditty.first(:title => 'HotDitties')
+  if @hot_ditties
+    # if we have a hot ditties tiddler, split it out ...
+    ditty_list = @hot_ditties.body.split("\n").map {|t| t.strip }
+    # ... and find those ditties
+    @ditties = Ditty.all(:title.in => ditty_list)
+    haml :index
+  else
+  end
 end
 
 get '/new' do
