@@ -8,7 +8,7 @@ require 'redcloth'
 
 configure do
   DataMapper::Logger.new(STDERR, :debug) if development?
-  DataMapper.setup(:default, "sqlite3:songbook.db")
+  DataMapper.setup(:default, ENV['DATABASE_URL'] || "sqlite3:songbook.db")
 
   require 'models'
 #  DataMapper.auto_migrate!
