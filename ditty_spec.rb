@@ -23,7 +23,7 @@ DataMapper::Logger.new('test.log', :debug)
 ENV['DATABASE_URL'] = 'sqlite3::memory:'
 require 'ditty'
 
-describe 'Ditty' do
+describe 'Ditty Application' do
   before(:all) do
     DataMapper.auto_migrate!
   end
