@@ -24,32 +24,38 @@ ENV['DATABASE_URL'] = 'sqlite3::memory:'
 require 'ditty'
 
 describe 'Ditty' do
-
-  before(:each) do
+  before(:all) do
     DataMapper.auto_migrate!
   end
 
   describe 'bulk actions' do
     describe 'GET /' do
       describe 'with a HotDitties ditty' do
-        before(:each) do
+        before(:all) do
           post '/', :title => 'AnAwesomeDitty', :body => 'See how awesome it is?'
           post '/', :title => 'PlainDitty', :body => 'Nothing to see here, move along'
           post '/', :title => 'ALessThanAwesomeDitty', :body => 'See how un-awesome it is?'
           post '/', :title => 'HotDitties', :body => 'AnAwesomeDitty'
           get '/'
+          @response = last_response
+          @body     = last_response.body.to_s
         end
 
+        after(:all) do
+          DataMapper.auto_migrate!
+        end
+
+
         it "shows successfully" do
-          last_response.should be_ok
+          @response.should be_ok
         end
 
         it "has a ditty mentioned on the hot ditty page" do
-          last_response.body.should have_tag('div.ditty#AnAwesomeDitty')
+          @body.should have_tag('div.ditty#AnAwesomeDitty')
         end
 
         it "doesn't have a ditty which isn't mentioned" do
-          last_response.body.should_not have_tag('div.ditty#ALessThanAwesomeDitty')
+          @body.should_not have_tag('div.ditty#ALessThanAwesomeDitty')
         end
 
         it "shows multiple ditties when they're on the list" do
@@ -62,35 +68,42 @@ describe 'Ditty' do
     end
 
     describe 'POST /' do
-      before(:each) do
+      before(:all) do
         post '/', :title => 'AnAwesomeDitty', :body => 'See how awesome it is?'
+        @response = last_response
+        @body     = last_response.body.to_s
       end
 
+      after(:all) do
+        DataMapper.auto_migrate!
+      end
+
+
       it 'creates new ditties by posting to /' do
-        last_response.should be_ok
+        @response.should be_ok
       end
 
       it 'returns a ditty' do
-        last_response.body.should have_tag('div.ditty')
-        last_response.body.should have_tag('div.ditty div.body')
+        @body.should have_tag('div.ditty')
+        @body.should have_tag('div.ditty div.body')
       end
 
       it 'returns the new ditty' do
-        last_response.body.should have_tag('div.ditty') do |ditty|
+        @body.should have_tag('div.ditty') do |ditty|
           ditty.should have_tag('h3', 'AnAwesomeDitty')
         end
       end
 
       it 'returns the ditty with an id' do
-        last_response.body.should have_tag('div#AnAwesomeDitty')
+        @body.should have_tag('div#AnAwesomeDitty')
       end
 
       it 'has a edit link' do
-        last_response.body.should have_tag("a[@rel='edit' @href='/AnAwesomeDitty/edit']")
+        @body.should have_tag("a[@rel='edit' @href='/AnAwesomeDitty/edit']")
       end
 
       it 'has a close link' do
-        last_response.body.should have_tag("a[@rel='close' @href='/AnAwesomeDitty']")
+        @body.should have_tag("a[@rel='close' @href='/AnAwesomeDitty']")
       end
 
       it 'responds with 400 if there are validation issues' do
@@ -111,30 +124,33 @@ describe 'Ditty' do
 
 
     describe 'GET /new' do
-      before(:each) do
+      before(:all) do
         get '/new'
+        @response = last_response
+        @body     = last_response.body.to_s
       end
 
+
       it 'has an action to supply a new ditty form' do
-        last_response.should be_ok
+        @response.should be_ok
       end
 
       it 'returns a new ditty form' do
-        last_response.body.should have_tag('div.ditty_edit') do |div|
+        @body.should have_tag('div.ditty_edit') do |div|
           div.should have_tag('h3', 'New Ditty')
         end
       end
 
       it 'it returns a new ditty form with an actual form!' do
-        last_response.body.should have_tag('div.ditty_edit form[@action="/"]')
+        @body.should have_tag('div.ditty_edit form[@action="/"]')
       end
 
       it 'has an input field for a ditty title' do
-        last_response.body.should have_tag('form[@action="/"] input[@name="ditty_title"]')
+        @body.should have_tag('form[@action="/"] input[@name="ditty_title"]')
       end
 
       it 'has an input field for a ditty title which is empty when no param is passed' do
-        last_response.body.should have_tag('form[@action="/"] input[@name="ditty_title" @value=""]')
+        @body.should have_tag('form[@action="/"] input[@name="ditty_title" @value=""]')
       end
 
       it 'fills in the title when the param is passed' do
@@ -147,26 +163,35 @@ describe 'Ditty' do
   end
 
   describe 'individual ditties' do
-    before(:each) do
+    before(:all) do
       Ditty.create(:title => 'AnAwesomeDitty', :body => 'See how awesome it is?')
       Ditty.create(:title => 'LinkTestingDitty', :body => 'Have you seen AnAwesomeDitty ?')
     end
 
+    after(:all) do
+      DataMapper.auto_migrate!
+    end
+
+
     describe 'get' do
-      before(:each) do
+      before(:all) do
         get '/AnAwesomeDitty'
+        @response = last_response
+        @body     = last_response.body.to_s
       end
+
+
       it 'responds successfully if the ditty exists' do
-        last_response.should be_ok
+        @response.should be_ok
       end
 
       it 'returns a ditty' do
-        last_response.body.should have_tag('div.ditty')
-        last_response.body.should have_tag('div.ditty div.body')
+        @body.should have_tag('div.ditty')
+        @body.should have_tag('div.ditty div.body')
       end
 
       it 'returns the ditty' do
-        last_response.body.should have_tag('div.ditty') do |ditty|
+        @body.should have_tag('div.ditty') do |ditty|
           ditty.should have_tag('h3', 'AnAwesomeDitty')
           ditty.should have_tag('div.body') do |body|
             body.inner_html.should match(/See how awesome it is\?/)
@@ -175,15 +200,15 @@ describe 'Ditty' do
       end
 
       it 'returns a ditty with an id' do
-        last_response.body.should have_tag('div#AnAwesomeDitty')
+        @body.should have_tag('div#AnAwesomeDitty')
       end
 
       it 'has a edit link' do
-        last_response.body.should have_tag("a[@rel='edit' @href='/AnAwesomeDitty/edit']")
+        @body.should have_tag("a[@rel='edit' @href='/AnAwesomeDitty/edit']")
       end
 
       it 'has a close link' do
-        last_response.body.should have_tag("a[@rel='close' @href='/AnAwesomeDitty']")
+        @body.should have_tag("a[@rel='close' @href='/AnAwesomeDitty']")
       end
 
       it 'responds with fourohfour for a non-existent ditty' do
@@ -194,41 +219,44 @@ describe 'Ditty' do
 
 
     describe 'edit' do
-      before(:each) do
+      before(:all) do
         get '/AnAwesomeDitty/edit'
+        @response = last_response
+        @body     = last_response.body.to_s
       end
+
       it 'responds successfully if the ditty exists' do
-        last_response.should be_ok
+        @response.should be_ok
       end
 
       it 'returns a ditty edit form' do
-        last_response.body.should have_tag('div.ditty_edit')
+        @body.should have_tag('div.ditty_edit')
       end
 
       it 'returns the ditty edit form' do
-        last_response.body.should have_tag('div.ditty_edit') do |ditty|
+        @body.should have_tag('div.ditty_edit') do |ditty|
           ditty.should have_tag('h3', 'AnAwesomeDitty')
         end
       end
 
       it 'returns a ditty edit form with an id' do
-        last_response.body.should have_tag('div#edit_AnAwesomeDitty')
+        @body.should have_tag('div#edit_AnAwesomeDitty')
       end
 
       it 'has a form' do
-        last_response.body.should have_tag('div.ditty_edit form')
+        @body.should have_tag('div.ditty_edit form')
       end
 
       it 'has an done link' do
-        last_response.body.should have_tag("a[@rel='update' @href='/AnAwesomeDitty']")
+        @body.should have_tag("a[@rel='update' @href='/AnAwesomeDitty']")
       end
 
       it 'has an cancel link' do
-        last_response.body.should have_tag("a[@rel='cancel' @href='/AnAwesomeDitty']")
+        @body.should have_tag("a[@rel='cancel' @href='/AnAwesomeDitty']")
       end
 
       it 'has an delete link' do
-        last_response.body.should have_tag("a[@rel='destroy' @href='/AnAwesomeDitty']")
+        @body.should have_tag("a[@rel='destroy' @href='/AnAwesomeDitty']")
       end
 
       it 'responds with fourohfour for a non-existent ditty' do
@@ -239,15 +267,23 @@ describe 'Ditty' do
 
 
     describe 'update' do
-      before(:each) do
+      before(:all) do
         put '/AnAwesomeDitty', :title => 'AnAwesomeDitty', :body => 'A new body'
+        @response = last_response
+        @body     = last_response.body.to_s
       end
+
+      after(:all) do
+        put '/AnAwesomeDitty', :title => 'AnAwesomeDitty', :body => 'See how awesome it is?'
+      end
+
+
       it 'responds successfully if the ditty exists and the changes are okay' do
-        last_response.should be_ok
+        @response.should be_ok
       end
 
       it 'returns the modified ditty' do
-        last_response.body.should have_tag('div.ditty') do |ditty|
+        @body.should have_tag('div.ditty') do |ditty|
           ditty.should have_tag('h3', 'AnAwesomeDitty')
           ditty.should have_tag('div.body') do |body|
             body.inner_html.should match(/A new body/)
@@ -256,11 +292,11 @@ describe 'Ditty' do
       end
 
       it 'has a edit link' do
-        last_response.body.should have_tag("a[@rel='edit' @href='/AnAwesomeDitty/edit']")
+        @body.should have_tag("a[@rel='edit' @href='/AnAwesomeDitty/edit']")
       end
 
       it 'has a close link' do
-        last_response.body.should have_tag("a[@rel='close' @href='/AnAwesomeDitty']")
+        @body.should have_tag("a[@rel='close' @href='/AnAwesomeDitty']")
       end
 
       it 'responds with fourohfour for a non-existent ditty' do
@@ -268,25 +304,34 @@ describe 'Ditty' do
         last_response.status.should eql(404)
       end
 
-      it 'responds with 400 if there are validation issues' do
-        put '/AnAwesomeDitty', :title => 'AnAwesomeDitty', :body => ""
-        last_response.status.should eql(400)
-      end
-      it 'returns the validation issues' do
-        put '/AnAwesomeDitty', :title => 'AnAwesomeDitty', :body => ""
-        last_response.body.to_s.should match(/Ditty needs content/)
+      describe "with validation issues" do
+        before(:all) do
+          put '/AnAwesomeDitty', :title => 'AnAwesomeDitty', :body => ""
+        end
+
+        it 'responds with 400 if there are validation issues' do
+          last_response.status.should eql(400)
+        end
+
+        it 'returns the validation issues' do
+          last_response.body.to_s.should match(/Ditty needs content/)
+        end
       end
     end
 
 
     describe 'delete' do
+      after(:all) do
+        post '/', :title => 'AnAwesomeDitty', :body => 'See how awesome it is?'
+      end
+
+
       it 'responds successfully if the ditty exists' do
         delete '/AnAwesomeDitty'
         last_response.should be_ok
       end
 
       it 'deletes the ditty' do
-        delete '/AnAwesomeDitty'
         get '/AnAwesomeDitty'
         last_response.status.should eql(404)
       end
