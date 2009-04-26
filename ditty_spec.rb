@@ -1,5 +1,6 @@
 require 'minigems'
 require 'sinatra'
+require 'dm-core'
 require 'sinatra/test/rspec'
 require 'rspec_hpricot_matchers'
 
@@ -7,13 +8,13 @@ Spec::Runner.configure do |config|
   config.include RspecHpricotMatchers
 end
 
+# setup database enviroment and require ditty.
+File.unlink('test.log') if File.exists?('test.log')
+DataMapper::Logger.new('test.log', :debug)
+ENV['DATABASE_URL'] = 'sqlite3::memory:'
+require 'ditty'
+
 describe 'Ditty' do
-  require 'ditty'
-  before(:all) do
-    File.unlink('test.log') if File.exists?('test.log')
-    DataMapper::Logger.new('test.log', :debug)
-    DataMapper.setup(:default, 'sqlite3::memory:')
-  end
 
   before(:each) do
     DataMapper.auto_migrate!
