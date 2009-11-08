@@ -1,8 +1,7 @@
 h1. TODO
 
 * implement an 'All Ditties' index
-* prevent multiple loading of ditties
-* fix links when a ditty is made
-* add some styling
 * move over to git backend?
-* tagging?
+* tagging
+* Refactor new/edit forms
+* Use the 'stache?
