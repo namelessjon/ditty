@@ -56,3 +56,13 @@ ul.ditty_control li {
     display: inline;
     list-style-type: none;
 }
+
+ul.edit_links {
+    float: right;
+}
+
+ul.edit_links li {
+    display: inline;
+    list-style-type: none;
+}
+
