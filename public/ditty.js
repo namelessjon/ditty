@@ -32,6 +32,17 @@ $(document).ready(function() {
   );
 
   // make the new link work.
+  $("a[href='/new']").livequery('click',
+    function() {
+      var tag = this
+      $.get(this, function(data, status) {
+        $('#ditties').prepend(data);
+      });
+      return false;
+    }
+  );
+
+  // make a new link work.
   $("a.new_ditty").livequery('click',
     function() {
       var tag = this
