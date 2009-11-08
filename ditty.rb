@@ -36,13 +36,21 @@ helpers do
 
   def linkify_text(body)
     RedCloth.new(body).to_html.gsub(/([A-Z][a-z]+[A-Z][A-Za-z0-9]+)/) do |title|
-      @ditty = Ditty.first(:title => title)
-      if @ditty
-        "<a class='existing' href='/#{title}' title='#{title}'>#{title}</a>"
-      else
-        "<a class='new_ditty' href='/new?title=#{title}' title='#{title}'>#{title}</a>"
-      end
+      ditty2link(title)
     end
+  end
+
+  def ditty2link(title)
+    ditty = Ditty.first(:title => title)
+    if ditty
+      "<a class='existing' href='/#{title}' title='#{title}'>#{title}</a>"
+    else
+      "<a class='new_ditty' href='/new?title=#{title}' title='#{title}'>#{title}</a>"
+    end
+  end
+
+  def make_hot_ditty_list(body)
+    body.split("\n").map {|t| "<li>#{ditty2link(t.strip)}</li>" }
   end
 end
 
@@ -53,9 +61,11 @@ get '/' do
     ditty_list = @hot_ditties.body.split("\n").map {|t| t.strip }
     # ... and find those ditties
     @ditties = Ditty.all(:title.in => ditty_list)
+    @hot_ditty_list = make_hot_ditty_list(@hot_ditties.body)
   else
     # just display the first 10
     @ditties = Ditty.all(:limit => 10, :order => [:created_at.desc])
+    @hot_ditty_list = ""
   end
   haml :index
 end
