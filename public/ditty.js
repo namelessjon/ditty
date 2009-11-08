@@ -11,9 +11,13 @@ $(document).ready(function() {
   $("a.existing").livequery('click',
     function() {
       var tag = this;
+      var ditty_name = $(this).attr('title');
+      var ditty = $("div.ditty#" + ditty_name);
+      if (ditty.size() == 0) {
       $.get(this, function(data, status) {
-        $(tag).parents('.ditty').after(data);
-      });
+          $(tag).parents('.ditty').after(data);
+          }); 
+      };
       return false;
     }
   );
