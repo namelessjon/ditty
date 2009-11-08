@@ -74,7 +74,8 @@ end
 delete '/:id' do
   @ditty = Ditty.first(:title => params['id'])
   throw :halt, [404, 'ditty not found'] unless @ditty
-  throw :halt, [400, 'Destory Failed']  unless @ditty.destroy
+  throw :halt, [400, 'Destroy Failed']  unless @ditty.destroy
+  params['id']
 end
 
 put '/:id' do

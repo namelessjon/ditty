@@ -6,7 +6,7 @@
     %li
       %a{:rel => 'update', :href => "/#{@ditty.title}"} done
     %li
-      %a{:rel => 'destroy', :href => "/#{@ditty.title}"} delete
+      %a{:rel => 'destroy', :href => "/#{@ditty.title}" , :title => "Delete #{@ditty.title}" } delete
   %form{:action => "/#{@ditty.title}", :id => "#{@ditty.title}_form"}
     %input{:type => "text", :name => "ditty_title", :size => 60, :value => @ditty.title}
     %br

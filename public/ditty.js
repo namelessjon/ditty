@@ -64,8 +64,9 @@ $(document).ready(function() {
         timeout: 5000,
         data: {_method: 'DELETE' },
         success: function (data, status) {
-          $(tag).parents('.ditty_edit').prev().remove();
-          $(tag).parents('.ditty_edit').remove();
+          // we return the title, so!
+          $("#" + data).remove();
+          $("#edit_" + data ).remove();
         },
         error: function (xhr, status) {
           alert(xhr.responseText);
@@ -123,6 +124,7 @@ $(document).ready(function() {
         success: function (data, status) {
           $(tag).parents('.ditty_edit').after(data);
           $(tag).parents('.ditty_edit').remove();
+          $("a[title='" + form_data.title + "'].new_ditty").addClass('existing').removeClass('new_ditty').attr('href', "/"+ form_data.title);
         },
         error: function (xhr, status) {
           alert(xhr.responseText);
