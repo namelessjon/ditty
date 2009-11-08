@@ -10,4 +10,4 @@
   %form{:action => "/#{@ditty.title}", :id => "#{@ditty.title}_form"}
     %input{:type => "text", :name => "ditty_title", :size => 60, :value => @ditty.title}
     %br
-    %text_area{:name => 'ditty_body', :cols => 60, :rows => 10}= @ditty.body
+    %textarea{:name => 'ditty_body', :cols => 60, :rows => 10}= @ditty.body
