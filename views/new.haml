@@ -6,6 +6,6 @@
     %li
       %a{:rel => 'create', :href => "/"} done
   %form.edit_links{:action => '/'}
-    %input{:type => "text", :name => "ditty_title", :size => 60, :value => "{(params['title']) ? params['title'] : ''}"}
+    %input{:type => "text", :name => "ditty_title", :size => 60, :value => ((params['title']) ? params['title'] : '')}
     %br
-    %text_area{:name => 'ditty_body', :cols => 60, :rows => 10}
+    %textarea{:name => 'ditty_body', :cols => 60, :rows => 10}
