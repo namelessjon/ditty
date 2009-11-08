@@ -34,8 +34,9 @@ $(document).ready(function() {
   // make the new link work.
   $("a.new_ditty").livequery('click',
     function() {
+      var tag = this
       $.get(this, function(data, status) {
-        $('#ditties').append(data);
+        $(tag).parents('.ditty').prepend(data);
       });
       return false;
     }
