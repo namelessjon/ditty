@@ -1,25 +1,18 @@
 h1. Ditty
 
-A non-linear web notebook written with Sinatra and jQuery
+A non-linear web notebook written with "Sinatra":http://www.sinatrarb.com and "jQuery":http://www.jquery.com
 
 h2. What?
 
-Ditty is inspired by "TiddlyWiki":http://www.tiddlywiki.com written by
-Jeremy Ruston, and at some point might even make itself compatiable with that
-project.  For those that arn't familiar with the concept though:  Ditty (and
-TiddlyWiki) are designed around the concept of 'ditties' (or tiddlers) which
-represent little, or not so little, snippets of information that can be
-cross-linked.  However, rather than navigating around like a normal wiki, the
-ditties are instead inserted into the page body allowing you to dynamically
-choose what information is displayed.
+Ditty is inspired by "TiddlyWiki":http://www.tiddlywiki.com written by Jeremy Ruston, and at some point might even make itself compatible with that project.  For those that arn't familiar with the concept though:  Ditty (and TiddlyWiki) are designed around the concept of 'ditties' (or tiddlers) which represent little, or not so little, snippets of information that can be cross-linked.  However, rather than navigating around like a normal wiki, the ditties are instead inserted into the page body allowing you to dynamically choose what information is displayed.
 
 h2. How?
 
-This section will follow when Ditty is a little more polished
+This section will follow when Ditty is a little more polished.  But basically,just run @ditty.rb@.
 
 h2. License
 
-Copyright (c) 2008 Jonathan Stott
+Copyright (c) 2008-2009 Jonathan Stott
 
 Permission is hereby granted, free of charge, to any person
 obtaining a copy of this software and associated documentation
