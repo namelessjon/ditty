@@ -40,7 +40,7 @@ helpers do
       if @ditty
         "<a class='existing' href='/#{title}' title='#{title}'>#{title}</a>"
       else
-        "<a class='new_ditty' href='/new?title=#{title}'>#{title}</a>"
+        "<a class='new_ditty' href='/new?title=#{title}' title='#{title}'>#{title}</a>"
       end
     end
   end
