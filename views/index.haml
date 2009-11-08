@@ -2,19 +2,29 @@
 !!!
 %html{:xmlns => "http://www.w3.org/1999/xhtml", 'xml:lang' => "en", :lang => "en"}
   %head
-    %title Ditty - A non-linear web notebook
-    %script{:type => 'text/javascript', :src => 'jquery.js'}
-    %script{:type => 'text/javascript', :src => 'jquery.livequery.min.js'}
-    %script{:type => 'text/javascript', :src => 'jquery.form.js'}
-    %script{:type => 'text/javascript', :src => 'ditty.js'}
+    %title Ditty - A random collection of tunes
+    %script{:type => 'text/javascript', :src => 'jquery.js'}/
+    %script{:type => 'text/javascript', :src => 'jquery.livequery.min.js'}/
+    %script{:type => 'text/javascript', :src => 'jquery.form.js'}/
+    %script{:type => 'text/javascript', :src => 'ditty.js'}/
+    %link{:type => 'text/css', :rel => 'stylesheet', :href => '/style.css', :media => 'screen'}/
   %body
-    %h1 Ditty
-    %h2 A non-linear web notebook
+    #header
+      %h1 Ditty
+      #menu
+        %ul#nav
+          %li
+            %a.new_ditty{:href => '/ditty/new'} New Ditty
+          %li
+            %a.close_all{:href => '#'} Close All
+          %li
+            %a.hotlink{:href => '#'} Hot Ditties
     #content
-      #menubar Menu goes here!
-      #ditties
+      #right
         - @ditties.each do |ditty|
           =format_ditty(ditty)
-      #sidebar
-        %a.new_ditty{:href => '/ditty/new'} New Ditty
-        %a.close_all{:href => '#'} Close All
+      #left
+        .box
+        .box
+          %div{:style => "font-size: 0.8em;"} Design based on a design by <a href="http://www.minimalistic-design.net">Minimalistic Design</a>
+
