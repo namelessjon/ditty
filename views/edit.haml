@@ -1,0 +1,13 @@
+.ditty_edit{:id => "edit_#{@ditty.title}"}
+  %h3= @ditty.title
+  %ul.edit_links
+    %li
+      %a{:rel => 'cancel', :href => "/#{@ditty.title}"} cancel
+    %li
+      %a{:rel => 'update', :href => "/#{@ditty.title}"} done
+    %li
+      %a{:rel => 'destroy', :href => "/#{@ditty.title}"} delete
+  %form{:action => "/#{@ditty.title}", :id => "#{@ditty.title}_form"}
+    %input{:type => "text", :name => "ditty_title", :size => 60, :value => @ditty.title}
+    %br
+    %text_area{:name => 'ditty_body', :cols => 60, :rows => 10}= @ditty.body
