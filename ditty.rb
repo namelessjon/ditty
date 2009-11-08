@@ -53,9 +53,11 @@ get '/' do
     ditty_list = @hot_ditties.body.split("\n").map {|t| t.strip }
     # ... and find those ditties
     @ditties = Ditty.all(:title.in => ditty_list)
-    haml :index
   else
+    # just display the first 10
+    @ditties = Ditty.all(:limit => 10, :order => [:created_at.desc])
   end
+  haml :index
 end
 
 get '/new' do
