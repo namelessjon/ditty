@@ -21,8 +21,9 @@
             %a.hotlink{:href => '#'} Hot Ditties
     #content
       #right
-        - @ditties.each do |ditty|
-          =format_ditty(ditty)
+        #ditties
+          - @ditties.each do |ditty|
+            =format_ditty(ditty)
       #left
         .box
         .box
