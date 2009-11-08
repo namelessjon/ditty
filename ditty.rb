@@ -1,9 +1,10 @@
 require 'rubygems'
 require 'sinatra'
-require 'dm-validations'
 require 'dm-core'
+require 'dm-validations'
 require 'json'
 require 'redcloth'
+require 'haml'
 
 
 configure do
