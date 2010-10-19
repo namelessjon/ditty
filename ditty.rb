@@ -1,6 +1,7 @@
 require 'sinatra'
 require 'dm-core'
 require 'dm-validations'
+require 'dm-migrations'
 require 'json'
 require 'redcloth'
 require 'haml'
