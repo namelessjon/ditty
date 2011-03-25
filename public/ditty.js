@@ -1,6 +1,6 @@
 $(document).ready(function() {
   // let tiddlers be closed
-  $("div.ditty a[rel='close']").livequery('click',
+  $("div.ditty a[rel='close']").live('click',
     function() {
       $(this).parents('.ditty').slideUp('fast', function() { $(this).remove(); } );
       return false;
@@ -8,7 +8,7 @@ $(document).ready(function() {
   );
 
   // make get links work
-  $("a.existing").livequery('click',
+  $("a.existing").live('click',
     function() {
       var tag = this;
       var ditty_name = $(this).attr('title');
@@ -23,7 +23,7 @@ $(document).ready(function() {
   );
 
   // make the editing form cancellable
-  $("div.ditty_edit ul.edit_links a[rel='cancel']").livequery('click',
+  $("div.ditty_edit ul.edit_links a[rel='cancel']").live('click',
     function() {
       $(this).parents('.ditty_edit').prev().slideDown('fast');
       $(this).parents('.ditty_edit').remove();
@@ -32,7 +32,7 @@ $(document).ready(function() {
   );
 
   // make the new link work.
-  $("a[href='/new']").livequery('click',
+  $("a[href='/new']").live('click',
     function() {
       var tag = this
       $.get(this, function(data, status) {
@@ -43,7 +43,7 @@ $(document).ready(function() {
   );
 
   // make a new link work.
-  $("a.new_ditty").livequery('click',
+  $("a.new_ditty").live('click',
     function() {
       var tag = this
       $.get(this, function(data, status) {
@@ -54,19 +54,17 @@ $(document).ready(function() {
   );
 
   // make edit links work
-  $("div.ditty a[rel='edit']").livequery('click',
-    function() {
-      var tag = this;
-      $.get(this, function(data, status) {
-        $(tag).parents('.ditty').after(data);
-        $(tag).parents('.ditty').hide();
-      });
-      return false;
-    }
-  );
+  $('#ditties').delegate("div.ditty a[rel='edit']", 'click', function(event) {
+    var tag = $(this);
+    $.get(tag, function(data, status) {
+      $(tag).parents('.ditty').after(data);
+      $(tag).parents('.ditty').hide();
+    });
+    return false;
+  });
 
   // make delete links work
-  $("div.ditty_edit a[rel='destroy']").livequery('click',
+  $("div.ditty_edit a[rel='destroy']").live('click',
     function() {
       var tag = this;
       $.ajax({
@@ -88,7 +86,7 @@ $(document).ready(function() {
   );
 
   // make done links work
-  $("div.ditty_edit a[rel='update']").livequery('click',
+  $("div.ditty_edit a[rel='update']").live('click',
     function() {
       var tag = this;
       var form_data = {};
@@ -117,7 +115,7 @@ $(document).ready(function() {
   );
 
   // make done links work on create forms
-  $("div.ditty_edit a[rel='create']").livequery('click',
+  $("div.ditty_edit a[rel='create']").live('click',
     function() {
       var tag = this;
       var form_data = {};
